@@ -5,7 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { join } from 'path'
 import { FilmModule } from './film/film.module'
-
+import { SWApiModule } from './sw-api/sw-api.module'
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -17,6 +17,7 @@ import { FilmModule } from './film/film.module'
       buildSchemaOptions: { dateScalarMode: 'timestamp' },
     }),
     FilmModule,
+    SWApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

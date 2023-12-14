@@ -7,12 +7,12 @@ type Film {
   created: String!
   director: String!
   edited: String!
-  episodeId: Int!
+  episode_id: Int!
   id: Int!
-  openingCrawl: String!
+  opening_crawl: String!
   planets: [String!]!
   producer: String!
-  releaseDate: String!
+  release_date: String!
   species: [String!]!
   starships: [String!]!
   title: String!
