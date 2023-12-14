@@ -9,7 +9,21 @@ import { HttpModule } from '@nestjs/axios'
 
 @Module({
   imports: [
-    HttpModule,
+    HttpModule.registerAsync({
+      imports: [
+        ConfigModule.forRoot({
+          validationSchema: Joi.object({
+            SW_API_BASE_URL: Joi.string()
+              .optional()
+              .default('https://swapi.dev/api'),
+          }),
+        }),
+      ],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        baseURL: configService.get('SW_API_BASE_URL'),
+      }),
+    }),
     CacheModule.registerAsync<RedisClientOptions>({
       imports: [
         ConfigModule.forRoot({
