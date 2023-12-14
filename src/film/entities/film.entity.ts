@@ -9,10 +9,10 @@ export class Film {
   title: string
 
   @Field(() => Int)
-  episodeId: number
+  episode_id: number
 
   @Field()
-  openingCrawl: string
+  opening_crawl: string
 
   @Field()
   director: string
@@ -21,7 +21,7 @@ export class Film {
   producer: string
 
   @Field()
-  releaseDate: string
+  release_date: string
 
   @Field(() => [String])
   characters: string[]

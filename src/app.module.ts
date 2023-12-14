@@ -13,6 +13,8 @@ import { FilmModule } from './film/film.module'
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: true,
       sortSchema: true,
+      introspection: process.env.NODE_ENV !== 'production',
+      buildSchemaOptions: { dateScalarMode: 'timestamp' },
     }),
     FilmModule,
   ],

@@ -16,6 +16,7 @@ async function bootstrap() {
   })
 
   await app.startAllMicroservices()
+  app.enableShutdownHooks()
   await app.listen(port, () => logger.log(`App listening on the port ${port}`))
 }
 bootstrap()
