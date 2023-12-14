@@ -4,6 +4,7 @@ import { SWApiService } from './sw-api'
 export class AppService {
   constructor(private readonly swApiService: SWApiService) {}
   async getHello() {
-    return this.swApiService.testCache()
+    return 'Hello World!'
+    // return this.swApiService.getById('unknown', '1')
   }
 }
