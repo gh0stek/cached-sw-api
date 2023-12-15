@@ -1,10 +1,8 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql'
+import { Base } from '../../lib'
 
 @ObjectType()
-export class Film {
-  @Field(() => Int)
-  id: number
-
+export class Film extends Base {
   @Field()
   title: string
 

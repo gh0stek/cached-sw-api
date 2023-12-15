@@ -1,5 +1,6 @@
 import { Field, ObjectType, Int } from '@nestjs/graphql'
 import { Type } from '@nestjs/common'
+import { Base } from 'src/lib'
 
 export type SWApiResource =
   | 'people'
@@ -17,7 +18,7 @@ export interface SWApiResourceResponse {
 export type SWApiResponse<T extends SWApiResourceResponse> = Omit<
   T,
   'apiResource'
->
+> & { url: string } & Base
 
 export interface IPaginatedType<T> {
   count: number

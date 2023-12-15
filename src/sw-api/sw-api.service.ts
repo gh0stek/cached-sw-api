@@ -3,9 +3,8 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { HttpService } from '@nestjs/axios'
 import { Cache } from 'cache-manager'
 import { getLogger } from 'src/logging'
-import { firstValueFrom } from 'rxjs'
+import { firstValueFrom, map } from 'rxjs'
 import { SWApiResourceResponse, SWApiResponse, IPaginatedType } from './types'
-import { AxiosResponse } from 'axios'
 
 const logger = getLogger('SWApiService')
 
@@ -15,14 +14,7 @@ export class SWApiService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private httpService: HttpService,
   ) {}
-  async testCache() {
-    await this.cacheManager.set('test', { test: 'test' })
-    logger.info('set cache')
-    const value = await this.cacheManager.get('test')
-    logger.info(`get cache`, { value })
-    const response = await firstValueFrom(this.httpService.get('/people'))
-    return response.data
-  }
+
   async getById<T extends SWApiResourceResponse>(
     resource: T['apiResource'],
     id: number,
@@ -31,27 +23,33 @@ export class SWApiService {
     try {
       const cached = await this.cacheManager.get<SWApiResponse<T>>(key)
       if (cached) {
-        logger.info(`cache hit for ${key}`)
+        logger.debug(`cache hit for ${key}`)
         return cached
       }
     } catch (e) {
       logger.error(`get cache error for ${key}`, e)
     }
-    logger.info(`cache miss for ${key}`)
+    logger.debug(`cache miss for ${key}`)
 
-    let response: AxiosResponse<SWApiResponse<T>>
+    let response: SWApiResponse<T>
 
     try {
       response = await firstValueFrom(
-        this.httpService.get<SWApiResponse<T>>(`/${resource}/${id}`),
+        this.httpService.get<SWApiResponse<T>>(`/${resource}/${id}`).pipe(
+          map((response) => ({
+            ...response.data,
+            id: +response.data.url[response.data.url.length - 2],
+          })),
+        ),
       )
     } catch (e) {
       logger.error(`get ${resource} ${id} error`, e)
       throw e
     }
-    await this.cacheManager.set(key, response.data)
-    return response.data
+    await this.cacheManager.set(key, response)
+    return response
   }
+
   async getPage<T extends SWApiResourceResponse>(
     resource: T['apiResource'],
     pageArg = 1,
@@ -63,30 +61,38 @@ export class SWApiService {
       const cached =
         await this.cacheManager.get<IPaginatedType<SWApiResponse<T>>>(key)
       if (cached) {
-        logger.info(`cache hit for ${key}`)
+        logger.debug(`cache hit for ${key}`)
         return cached
       }
     } catch (e) {
       logger.error(`get cache error for ${key}`, e)
     }
-    logger.info(`cache miss for ${key}`)
+    logger.debug(`cache miss for ${key}`)
 
-    let response: AxiosResponse<IPaginatedType<SWApiResponse<T>>>
+    let response: IPaginatedType<SWApiResponse<T>>
 
     try {
       response = await firstValueFrom(
-        this.httpService.get<IPaginatedType<SWApiResponse<T>>>(
-          `/${resource}/`,
-          {
+        this.httpService
+          .get<IPaginatedType<SWApiResponse<T>>>(`/${resource}/`, {
             params: { page, search },
-          },
-        ),
+          })
+          .pipe(
+            map((response) => response.data),
+            map((data) => ({
+              ...data,
+              results: data.results.map((result) => ({
+                ...result,
+                id: +result.url[result.url.length - 2],
+              })),
+            })),
+          ),
       )
     } catch (e) {
       logger.error(`get ${resource} page: ${page} search: ${search} error`, e)
       throw e
     }
-    await this.cacheManager.set(key, response.data)
-    return response.data
+    await this.cacheManager.set(key, response)
+    return response
   }
 }

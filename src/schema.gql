@@ -38,7 +38,7 @@ type Person {
   created: String!
   edited: String!
   eye_color: String!
-  films: [String!]!
+  films: [Film!]!
   gender: String!
   hair_color: String!
   height: String!
