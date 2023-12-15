@@ -6,6 +6,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { join } from 'path'
 import { FilmModule } from './film/film.module'
 import { SWApiModule } from './sw-api/sw-api.module'
+import { PeopleModule } from './people/people.module';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -18,6 +19,7 @@ import { SWApiModule } from './sw-api/sw-api.module'
     }),
     FilmModule,
     SWApiModule,
+    PeopleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -26,7 +26,36 @@ type PaginatedFilms {
   results: [Film!]
 }
 
+type PaginatedPeople {
+  count: Int!
+  next: String
+  previous: String
+  results: [Person!]
+}
+
+type Person {
+  birth_year: String!
+  created: String!
+  edited: String!
+  eye_color: String!
+  films: [String!]!
+  gender: String!
+  hair_color: String!
+  height: String!
+  homeworld: String!
+  id: Int!
+  mass: String!
+  name: String!
+  skin_color: String!
+  species: [String!]!
+  starships: [String!]!
+  url: String!
+  vehicles: [String!]!
+}
+
 type Query {
   film(id: Int!): Film!
   films(page: Int, search: String): PaginatedFilms!
+  people(page: Int, search: String): PaginatedPeople!
+  person(id: Int!): Person!
 }
