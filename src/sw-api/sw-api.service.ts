@@ -54,10 +54,10 @@ export class SWApiService {
   }
   async getPage<T extends SWApiResourceResponse>(
     resource: T['apiResource'],
-    page = 1,
+    pageArg = 1,
     search?: string,
   ): Promise<IPaginatedType<SWApiResponse<T>>> {
-    page = page ?? 1
+    const page = pageArg ?? 1
     const key = `${resource}-page:${page}-search:${search}`
     try {
       const cached =
