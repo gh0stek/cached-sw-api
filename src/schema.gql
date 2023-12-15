@@ -19,6 +19,14 @@ type Film {
   vehicles: [String!]!
 }
 
+type PaginatedFilms {
+  count: Int!
+  next: String
+  previous: String
+  results: [Film!]
+}
+
 type Query {
   film(id: Int!): Film!
+  films(page: Int, search: String): PaginatedFilms!
 }
