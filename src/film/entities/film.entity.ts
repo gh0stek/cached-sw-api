@@ -1,6 +1,10 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql'
 import { Base } from '../../lib'
 import { Person } from 'src/people/entities/person.entity'
+import { Planet } from 'src/planet/entities/planet.entity'
+import { Starship } from 'src/starship/entities/starship.entity'
+import { Vehicle } from 'src/vehicle/entities/vehicle.entity'
+import { Species } from 'src/species/entities/species.entity'
 
 @ObjectType()
 export class Film extends Base {
@@ -25,16 +29,16 @@ export class Film extends Base {
   @Field(() => [Person])
   characters: string[]
 
-  @Field(() => [String])
+  @Field(() => [Planet])
   planets: string[]
 
-  @Field(() => [String])
+  @Field(() => [Starship])
   starships: string[]
 
-  @Field(() => [String])
+  @Field(() => [Vehicle])
   vehicles: string[]
 
-  @Field(() => [String])
+  @Field(() => [Species])
   species: string[]
 
   @Field()

@@ -7,6 +7,10 @@ import { join } from 'path'
 import { FilmModule } from './film/film.module'
 import { SWApiModule } from './sw-api/sw-api.module'
 import { PeopleModule } from './people/people.module';
+import { SpeciesModule } from './species/species.module';
+import { VehicleModule } from './vehicle/vehicle.module';
+import { StarshipModule } from './starship/starship.module';
+import { PlanetModule } from './planet/planet.module';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -20,6 +24,10 @@ import { PeopleModule } from './people/people.module';
     FilmModule,
     SWApiModule,
     PeopleModule,
+    SpeciesModule,
+    VehicleModule,
+    StarshipModule,
+    PlanetModule,
   ],
   controllers: [AppController],
   providers: [AppService],

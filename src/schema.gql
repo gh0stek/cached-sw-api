@@ -10,13 +10,13 @@ type Film {
   episode_id: Int!
   id: Int!
   opening_crawl: String!
-  planets: [String!]!
+  planets: [Planet!]!
   producer: String!
   release_date: String!
-  species: [String!]!
-  starships: [String!]!
+  species: [Species!]!
+  starships: [Starship!]!
   title: String!
-  vehicles: [String!]!
+  vehicles: [Vehicle!]!
 }
 
 type PaginatedFilms {
@@ -33,6 +33,34 @@ type PaginatedPeople {
   results: [Person!]
 }
 
+type PaginatedPlanets {
+  count: Int!
+  next: String
+  previous: String
+  results: [Planet!]
+}
+
+type PaginatedSpecies {
+  count: Int!
+  next: String
+  previous: String
+  results: [Species!]
+}
+
+type PaginatedStarships {
+  count: Int!
+  next: String
+  previous: String
+  results: [Starship!]
+}
+
+type PaginatedVehicles {
+  count: Int!
+  next: String
+  previous: String
+  results: [Vehicle!]
+}
+
 type Person {
   birth_year: String!
   created: String!
@@ -42,20 +70,112 @@ type Person {
   gender: String!
   hair_color: String!
   height: String!
-  homeworld: String!
+  homeworld: Planet!
   id: Int!
   mass: String!
   name: String!
   skin_color: String!
-  species: [String!]!
-  starships: [String!]!
+  species: [Species!]!
+  starships: [Starship!]!
   url: String!
-  vehicles: [String!]!
+  vehicles: [Vehicle!]!
+}
+
+type Planet {
+  climate: String!
+  created: Timestamp!
+  diameter: String!
+  edited: Timestamp!
+  films: [Film!]!
+  gravity: String!
+  id: Int!
+  name: String!
+  orbital_period: String!
+  population: String!
+  residents: [Person!]!
+  rotation_period: String!
+  surface_water: String!
+  terrain: String!
+  url: String!
 }
 
 type Query {
   film(id: Int!): Film!
   films(page: Int, search: String): PaginatedFilms!
+  findSpecies(id: Int!): Species!
   people(page: Int, search: String): PaginatedPeople!
   person(id: Int!): Person!
+  planet(id: Int!): Planet!
+  planets(page: Int, search: String): PaginatedPlanets!
+  species(page: Int, search: String): PaginatedSpecies!
+  starship(id: Int!): Starship!
+  starships(page: Int, search: String): PaginatedStarships!
+  vehicle(id: Int!): Vehicle!
+  vehicles(page: Int, search: String): PaginatedVehicles!
+}
+
+type Species {
+  average_height: Int!
+  average_lifespan: String!
+  classification: String!
+  created: String!
+  designation: String!
+  edited: String!
+  eye_colors: String!
+  films: [Film!]!
+  hair_colors: String!
+  homeworld: Planet!
+  id: Int!
+  language: String!
+  name: String!
+  people: [Person!]!
+  skin_colors: String!
+  url: String!
+}
+
+type Starship {
+  MGLT: String!
+  cargo_capacity: String!
+  consumables: String!
+  cost_in_credits: String!
+  created: String!
+  crew: String!
+  edited: String!
+  films: [Film!]!
+  hyperdrive_rating: String!
+  id: Int!
+  length: String!
+  manufacturer: String!
+  max_atmosphering_speed: String!
+  model: String!
+  name: String!
+  passengers: String!
+  pilots: [Person!]!
+  starship_class: String!
+  url: String!
+}
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Vehicle {
+  cargo_capacity: String!
+  consumables: String!
+  cost_in_credits: String!
+  created: String!
+  crew: Int!
+  edited: String!
+  films: [Film!]!
+  id: Int!
+  length: String!
+  manufacturer: String!
+  max_atmosphering_speed: String!
+  model: String!
+  name: String!
+  passengers: Int!
+  pilots: [Person!]!
+  url: String!
+  vehicle_class: String!
 }
