@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql'
 import { Base } from '../../lib'
+import { Person } from 'src/people/entities/person.entity'
 
 @ObjectType()
 export class Film extends Base {
@@ -21,7 +22,7 @@ export class Film extends Base {
   @Field()
   release_date: string
 
-  @Field(() => [String])
+  @Field(() => [Person])
   characters: string[]
 
   @Field(() => [String])

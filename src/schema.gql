@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type Film {
-  characters: [String!]!
+  characters: [Person!]!
   created: String!
   director: String!
   edited: String!

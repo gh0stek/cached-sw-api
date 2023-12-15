@@ -13,6 +13,7 @@ import { PageArgs } from 'src/lib'
 import { Film } from 'src/film/entities/film.entity'
 import { FilmResource } from 'src/film/types'
 import { getLogger } from 'src/logging'
+import { getLastParamFromUrl } from 'src/utils'
 
 const logger = getLogger('PeopleResolver')
 
@@ -38,7 +39,7 @@ export class PeopleResolver {
         person.films.map((url) =>
           this.swApiService.getById<FilmResource>(
             'films',
-            +url[url.length - 2],
+            +getLastParamFromUrl(url),
           ),
         ),
       )
