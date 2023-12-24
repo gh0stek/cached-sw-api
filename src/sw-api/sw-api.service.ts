@@ -3,8 +3,9 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { HttpService } from '@nestjs/axios'
 import { Cache } from 'cache-manager'
 import { getLogger } from 'src/logging'
-import { firstValueFrom, map } from 'rxjs'
+import { firstValueFrom, map, lastValueFrom } from 'rxjs'
 import { SWApiResourceResponse, SWApiResponse, IPaginatedType } from './types'
+import { getLastParamFromUrl } from 'src/utils'
 
 const logger = getLogger('SWApiService')
 
@@ -27,7 +28,7 @@ export class SWApiService {
         return cached
       }
     } catch (e) {
-      logger.error(`get cache error for ${key}`, e)
+      logger.error(`get cache error for ${key}`, e.message)
     }
     logger.debug(`cache miss for ${key}`)
 
@@ -38,12 +39,12 @@ export class SWApiService {
         this.httpService.get<SWApiResponse<T>>(`/${resource}/${id}`).pipe(
           map((response) => ({
             ...response.data,
-            id: +response.data.url[response.data.url.length - 2],
+            id: +getLastParamFromUrl(response.data.url),
           })),
         ),
       )
     } catch (e) {
-      logger.error(`get ${resource} ${id} error`, e)
+      logger.error(`get ${resource} ${id} error`, e.message)
       throw e
     }
     await this.cacheManager.set(key, response)
@@ -83,7 +84,7 @@ export class SWApiService {
               ...data,
               results: data.results.map((result) => ({
                 ...result,
-                id: +result.url[result.url.length - 2],
+                id: +getLastParamFromUrl(result.url),
               })),
             })),
           ),
@@ -94,5 +95,26 @@ export class SWApiService {
     }
     await this.cacheManager.set(key, response)
     return response
+  }
+
+  async getAll<T extends SWApiResourceResponse>(
+    resource: T['apiResource'],
+  ): Promise<SWApiResponse<T>[]> {
+    const firsPage = await this.getPage<T>(resource, 1)
+    const count = firsPage.count
+
+    if (count <= 10) {
+      return firsPage.results
+    }
+
+    const pages = Math.ceil(count / 10)
+
+    const promises = [Promise.resolve(firsPage)]
+
+    for (let i = 2; i <= pages; i++) {
+      promises.push(this.getPage<T>(resource, i))
+    }
+    const responses = await Promise.all(promises)
+    return responses.flatMap((response) => response.results)
   }
 }
