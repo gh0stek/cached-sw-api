@@ -3,7 +3,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { HttpService } from '@nestjs/axios'
 import { Cache } from 'cache-manager'
 import { getLogger } from 'src/logging'
-import { firstValueFrom, map, lastValueFrom } from 'rxjs'
+import { firstValueFrom, map } from 'rxjs'
 import { SWApiResourceResponse, SWApiResponse, IPaginatedType } from './types'
 import { getLastParamFromUrl } from 'src/utils'
 
